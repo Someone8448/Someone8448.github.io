@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<script src="https://mppclone.com/jquery.min.js"></script>
+<input id="id-input" placeholder="ID Here" maxlength="24" autocomplete="off" />
+
+<button id="options" type="button">Options</button>
+<a id="status">Enter an ID.</a>
+<br>
+<button id="nh" type="button">NH</button>
+<br>
+<button id="rh" type="button">RH</button>
+<br>
+<button id="ch" type="button">CH</button>
+<br>
+<button id="stats" type="button">Stats</button>
+<br>
+<p id="output"></p>
+
+
+<script>
+globalThis.hidden = false
+$(function () {
+        $("#id-input").on("keydown", async function (evt) {
+                if (evt.keyCode != 13) return;
+                var msg = $("#id-input").val()
+                $("#id-input").val('')
+                $('#output').text('')
+                $('#status').text(`Loading...`)
+                user = await fetch(`https://crumblier-hyena-8566.dataplicity.io/?p=${encodeURIComponent(msg)}`)
+                .then(response => response.json())
+                if (JSON.stringify(user).startsWith('[')) {$("#output").html(`There were multiple results<br> ${user.join('<br>')}`); $('#status').text(`${Object.keys(user).length} Results`)} else if (JSON.stringify(user) === "{}") {$('#status').text(`0 Results`)} else {$('#status').text(`1 Result`)}
+
+                console.log(user)
+
+        })
+ $("#nh").hide()
+ $("#rh").hide()
+ $("#ch").hide()
+ $("#stats").hide()
+$("#options").on('click',  () => {if (hidden) { $("#nh").hide();$("#rh").hide();$("#ch").hide();$("#stats").hide()} else { $("#nh").show();$("#rh").show();$("#ch").show();$("#stats").show()}; hidden = !hidden})
+$("#ch").on('click', () => {if (Object.keys(user).length == 0) return; $('#output').html(`User's CH <br>${user.pc.join('<br>')}`)})
+$("#nh").on('click', () => {if (Object.keys(user).length == 0) return; $('#output').html(`User's NH <br>${user.pn.join('<br>')}`)})
+$("#rh").on('click', () => {if (Object.keys(user).length == 0) return; $('#output').html(`User's RH <br>${user.pr.join('<br>')}`)})
+$("#stats").on('click', () => {if (JSON.stringify(user).startsWith('[')) return $("#output").html(`There were multiple results<br>${user.join('<br>')}`); $("#output").html(`Name: ${user.n}<br>Color: ${user.c}<br>_ID: ${user.i}<br>First seen: ${new Date(user.t).toLocaleString()}<br>Last seen: ${new Date(user.l).toLocaleString()}<br>Last channel: ${user.r}<br>Names: ${user.pn.length}<br>Colors: ${user.pc.length}<br>Rooms: ${user.pr ? user.pr.length : 1}`); })
+
+
+})
+</script>
+<style>
+body {
+background-color: rgb(0, 0, 0);
+font-family: Arial, sans-serif;
+}
+h1 {
+color: rgb(255, 255, 255);
+}
+h2 {
+color: rgb(255, 255, 255);
+}
+h3 {
+color: rgb(255, 255, 255);
+}
+h4 {
+color: rgb(255, 255, 255);
+}
+h5 {
+color: rgb(255, 255, 255);
+}
+h6 {
+color: rgb(255, 255, 255);
+}
+p {
+color: rgb(255, 255, 255);
+}
+a {
+color: rgb(255, 255, 0);
+}
+</style>
+</html>
